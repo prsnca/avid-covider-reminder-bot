@@ -89,7 +89,16 @@ def main():
     dp.add_error_handler(error)
 
     # Start the Bot
-    updater.start_polling()
+    heroku_url = os.getenv('HEROKU_URL')
+    if heroku_url:
+        port = int(os.getenv('PORT', '8443'))
+        updater.start_webhook(listen="0.0.0.0",
+                          port=port,
+                          url_path=token)
+        updater.bot.set_webhook(heroku_url + token)
+        updater.idle()
+    else:
+        updater.start_polling()
 
     updater.idle()
 
