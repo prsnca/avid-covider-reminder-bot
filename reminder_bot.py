@@ -3,7 +3,7 @@
 
 import logging
 
-import os
+import os, json
 from telegram import ReplyKeyboardMarkup, ParseMode
 from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters,
                           ConversationHandler)
@@ -21,6 +21,16 @@ hours = hours[8:] + hours[:8]
 reply_keyboard = [hours[x:x+4] for x in range(0, 24, 4)]
 markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
 
+
+class LogMessage(object):
+    def __init__(self, message, **kwargs):
+        self.message = message
+        self.kwargs = kwargs
+
+    def __str__(self):
+        return json.dumps({'message': self.message, **self.kwargs})
+
+_ = LogMessage
 
 def start(update, context):
     update.message.reply_text(
@@ -62,6 +72,7 @@ def error(update, context):
 
 
 def main():
+    logger.info(_("Starting bot"))
     token = os.getenv('BOT_TOKEN')
     if token == None:
         logger.error(_('BOT_TOKEN is missing'))
