@@ -4,9 +4,9 @@
 import logging
 
 import os, json
-from telegram import ReplyKeyboardMarkup, ParseMode
+from telegram import ReplyKeyboardMarkup, ParseMode, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters,
-                          ConversationHandler)
+                          ConversationHandler, CallbackQueryHandler)
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -14,12 +14,12 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
-HOUR = range(1)
+inline_hours = [InlineKeyboardButton(str(x) + ":00", callback_data=x) for x in list(range(0, 24))]
+inline_hours = inline_hours[8:] + inline_hours[:8]
+inline_keyboard = [inline_hours[x:x+4] for x in range(0, 24, 4)]
+inline_markup = InlineKeyboardMarkup(inline_keyboard)
 
-hours = [str(x) + ":00" for x in list(range(0, 24))]
-hours = hours[8:] + hours[:8]
-reply_keyboard = [hours[x:x+4] for x in range(0, 24, 4)]
-markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
+inline_menu = InlineKeyboardMarkup([[InlineKeyboardButton("שנה שעה", callback_data='hour')], [InlineKeyboardButton("בטל תזכורת", callback_data='cancel')]])
 
 
 class LogMessage(object):
@@ -32,34 +32,55 @@ class LogMessage(object):
 
 _ = LogMessage
 
+
 def start(update, context):
-    update.message.reply_text(
-        "שלום!\n"
-        "מתי תרצה לקבל את ההתראה היומית שלך?",
-        reply_markup=markup)
-
-    return HOUR
+    update.message.reply_text("שלום וברוכים הבאים לבוט!")
+    return ask_for_hour(update, context)
 
 
-def hour(update, context):
-    hour = update.message.text
-    # user = update.message.from_user
-    # chat_id = update.message.chat_id
-    # set_user_updates(user, chat_id, hour)
-    update.message.reply_text(
+def ask_for_hour(update, context):
+    update.message.reply_text("מתי תרצה לקבל את ההתראה היומית שלך?", reply_markup=inline_markup)
+
+
+def change_hour(update, context):
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text("מתי תרצה לקבל את ההתראה היומית שלך?", reply_markup=inline_markup)
+
+
+def menu_choice(update, context):
+    query = update.callback_query
+    command = query.data
+    if command == 'cancel':
+        return cancel(update, context)
+    elif command == 'hour':
+        return change_hour(update, context)
+    return choose_hour(update, context)
+
+
+def cancel(update, context):
+    query = update.callback_query
+    query.answer()
+    query.edit_message_text(text="התזכורת היומית בוטלה! לחץ /start על מנת להירשם מחדש.")
+
+    # TODO - Delete from database
+
+
+def choose_hour(update, context):
+    query = update.callback_query
+    hour = query.data
+    user = query.message.from_user
+    chat_id = query.message.chat_id
+    set_user_updates(user, chat_id, hour)
+    query.answer()
+
+    query.edit_message_text(text=
         "מעולה!\n"
-        "נשלח לך לכאן כל יום בשעה *{}* התראה על מנת למלא את הטופס!".format(hour), parse_mode=ParseMode.MARKDOWN)
+        "נשלח לך לכאן כל יום בשעה *{}:00* תזכורת על מנת למלא את הטופס!".format(hour), parse_mode=ParseMode.MARKDOWN, reply_markup=inline_menu)
     # TODO add inline keyboard for - 1. hour change 2. unsubscribe
-
-    return ConversationHandler.END
-
-
-def done(update, content):
-    return ConversationHandler.END
 
 
 def set_user_updates(user, chat_id, hour):
-    hour_value = int(hour.split(':')[0])
     user_name = user.username
     # TODO - save to database
 
@@ -82,19 +103,8 @@ def main():
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
 
-    conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start)],
-
-        states={
-            HOUR: [MessageHandler(Filters.text(hours),
-                                      hour),
-                       ],
-        },
-
-        fallbacks=[MessageHandler(Filters.regex('^Done$'), done)]
-    )
-
-    dp.add_handler(conv_handler)
+    dp.add_handler(CommandHandler('start', start))
+    dp.add_handler(CallbackQueryHandler(menu_choice))
 
     # log all errors
     dp.add_error_handler(error)
