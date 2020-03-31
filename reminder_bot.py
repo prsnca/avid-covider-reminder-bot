@@ -21,6 +21,8 @@ inline_markup = InlineKeyboardMarkup(inline_keyboard)
 
 inline_menu = InlineKeyboardMarkup([[InlineKeyboardButton("שנה שעה", callback_data='hour')], [InlineKeyboardButton("בטל תזכורת", callback_data='cancel')]])
 
+reminder_menu = InlineKeyboardMarkup([[InlineKeyboardButton("https://coronaisrael.org", callback_data='clicked', url="https://coronaisrael.org")]]);
+
 
 class LogMessage(object):
     def __init__(self, message, **kwargs):
@@ -36,6 +38,10 @@ _ = LogMessage
 def start(update, context):
     update.message.reply_text("שלום וברוכים הבאים לבוט!")
     return ask_for_hour(update, context)
+
+
+def reminder(update, context):
+    update.message.reply_text("מלא את הטופס!", reply_markup=reminder_menu)
 
 
 def ask_for_hour(update, context):
@@ -55,6 +61,10 @@ def menu_choice(update, context):
         return cancel(update, context)
     elif command == 'hour':
         return change_hour(update, context)
+    elif command == 'clicked':
+        # TODO - Updated clicks/last clicked
+        query.answer()
+        return
     return choose_hour(update, context)
 
 
@@ -104,6 +114,7 @@ def main():
     dp = updater.dispatcher
 
     dp.add_handler(CommandHandler('start', start))
+    dp.add_handler(CommandHandler('reminder', reminder))
     dp.add_handler(CallbackQueryHandler(menu_choice))
 
     # log all errors
