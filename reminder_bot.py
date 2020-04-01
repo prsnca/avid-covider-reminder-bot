@@ -91,6 +91,7 @@ def choose_hour(update, context):
 
 
 def set_user_updates(user, chat_id, hour):
+    logger.info(_("User updating", user_name=user.username, chat_id=chat_id))
     user_name = user.username
     # TODO - save to database
 
