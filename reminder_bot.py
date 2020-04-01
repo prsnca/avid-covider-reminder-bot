@@ -21,7 +21,7 @@ inline_markup = InlineKeyboardMarkup(inline_keyboard)
 
 inline_menu = InlineKeyboardMarkup([[InlineKeyboardButton("שנה שעה", callback_data='hour')], [InlineKeyboardButton("בטל תזכורת", callback_data='cancel')]])
 
-reminder_menu = InlineKeyboardMarkup([[InlineKeyboardButton("https://coronaisrael.org", callback_data='clicked', url="https://coronaisrael.org")]]);
+reminder_menu = InlineKeyboardMarkup([[InlineKeyboardButton("coronaisrael.org", callback_data='clicked', url="https://coronaisrael.org/?source=telegram-reminder")]]);
 
 
 class LogMessage(object):
