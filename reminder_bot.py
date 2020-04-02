@@ -14,9 +14,8 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
-inline_hours = [InlineKeyboardButton(str(x) + ":00", callback_data=x) for x in list(range(0, 24))]
-inline_hours = inline_hours[8:] + inline_hours[:8]
-inline_keyboard = [inline_hours[x:x+4] for x in range(0, 24, 4)]
+inline_hours = [InlineKeyboardButton(str(x) + ":00", callback_data=x) for x in [8, 10, 18, 20, 22]]
+inline_keyboard = [[hour] for hour in inline_hours]
 inline_markup = InlineKeyboardMarkup(inline_keyboard)
 
 inline_menu = InlineKeyboardMarkup([[InlineKeyboardButton("שנה שעה", callback_data='hour')], [InlineKeyboardButton("בטל תזכורת", callback_data='cancel')]])
