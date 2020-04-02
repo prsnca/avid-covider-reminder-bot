@@ -18,9 +18,14 @@ inline_hours = [InlineKeyboardButton(str(x) + ":00", callback_data=x) for x in [
 inline_keyboard = [[hour] for hour in inline_hours]
 inline_markup = InlineKeyboardMarkup(inline_keyboard)
 
-inline_menu = InlineKeyboardMarkup([[InlineKeyboardButton("שנה שעה", callback_data='hour')], [InlineKeyboardButton("בטל תזכורת", callback_data='cancel')]])
+change_hour_button = InlineKeyboardButton("שנה שעה", callback_data='hour')
+reregister_button = InlineKeyboardButton("הירשם שנית", callback_data='hour')
+cancel_button = InlineKeyboardButton("בטל תזכורת", callback_data='cancel')
+reminder_button = InlineKeyboardButton("coronaisrael.org", callback_data='clicked', url="https://coronaisrael.org/?source=telegram-reminder")
 
-reminder_menu = InlineKeyboardMarkup([[InlineKeyboardButton("coronaisrael.org", callback_data='clicked', url="https://coronaisrael.org/?source=telegram-reminder")]]);
+inline_menu = InlineKeyboardMarkup([[change_hour_button], [cancel_button]])
+reminder_menu = InlineKeyboardMarkup([[reminder_button], [change_hour_button], [cancel_button]])
+cancel_menu = InlineKeyboardMarkup([[reregister_button]])
 
 
 class LogMessage(object):
@@ -35,7 +40,8 @@ _ = LogMessage
 
 
 def start(update, context):
-    update.message.reply_text("שלום וברוכים הבאים לבוט!")
+    logger.info(_("User started", update=update))
+    update.message.reply_text("ברוכים הבאים לבוט התזכורת של מחקר הקורונה של מכון וייצמן ותודה על ההשתתפות. הבוט הזה נועד לסייע לכם לזכור למלא את השאלון מידי יום באתר  coronaisrael.org, ולקבל מאיתנו עדכונים.")
     return ask_for_hour(update, context)
 
 
@@ -70,7 +76,7 @@ def menu_choice(update, context):
 def cancel(update, context):
     query = update.callback_query
     query.answer()
-    query.edit_message_text(text="התזכורת היומית בוטלה! לחץ /start על מנת להירשם מחדש.")
+    query.edit_message_text(text="התזכורת היומית בוטלה!", reply_markup=cancel_menu)
 
     # TODO - Delete from database
 
