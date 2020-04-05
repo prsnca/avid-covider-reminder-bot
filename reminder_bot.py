@@ -18,9 +18,9 @@ inline_hours = [InlineKeyboardButton(str(x) + ":00", callback_data=x) for x in [
 inline_keyboard = [[hour] for hour in inline_hours]
 inline_markup = InlineKeyboardMarkup(inline_keyboard)
 
-change_hour_button = InlineKeyboardButton("שנה שעה", callback_data='hour')
-reregister_button = InlineKeyboardButton("הירשם שנית", callback_data='hour')
-cancel_button = InlineKeyboardButton("בטל תזכורת", callback_data='cancel')
+change_hour_button = InlineKeyboardButton("שינוי שעת תזכורת יומית", callback_data='hour')
+reregister_button = InlineKeyboardButton("חידוש תזכורת יומית", callback_data='hour')
+cancel_button = InlineKeyboardButton("ביטול תזכורת יומית", callback_data='cancel')
 reminder_button = InlineKeyboardButton("coronaisrael.org", callback_data='clicked', url="https://coronaisrael.org/?source=telegram-reminder")
 
 inline_menu = InlineKeyboardMarkup([[change_hour_button], [cancel_button]])
@@ -40,23 +40,23 @@ _ = LogMessage
 
 
 def start(update, context):
-    logger.info(_("User started", update=update))
+    logger.info(_("User started"))
     update.message.reply_text("ברוכים הבאים לבוט התזכורת של מחקר הקורונה של מכון וייצמן ותודה על ההשתתפות. הבוט הזה נועד לסייע לכם לזכור למלא את השאלון מידי יום באתר  coronaisrael.org, ולקבל מאיתנו עדכונים.")
     return ask_for_hour(update, context)
 
 
 def reminder(update, context):
-    update.message.reply_text("מלא את הטופס!", reply_markup=reminder_menu)
+    update.message.reply_text("מלא את השאלון", reply_markup=reminder_menu)
 
 
 def ask_for_hour(update, context):
-    update.message.reply_text("מתי תרצה לקבל את ההתראה היומית שלך?", reply_markup=inline_markup)
+    update.message.reply_text("באיזו שעה ביום תרצו שנזכיר לכם למלא את השאלון?", reply_markup=inline_markup)
 
 
 def change_hour(update, context):
     query = update.callback_query
     query.answer()
-    query.edit_message_text("מתי תרצה לקבל את ההתראה היומית שלך?", reply_markup=inline_markup)
+    query.edit_message_text("באיזו שעה ביום תרצו שנזכיר לכם למלא את השאלון?", reply_markup=inline_markup)
 
 
 def menu_choice(update, context):
@@ -76,7 +76,7 @@ def menu_choice(update, context):
 def cancel(update, context):
     query = update.callback_query
     query.answer()
-    query.edit_message_text(text="התזכורת היומית בוטלה!", reply_markup=cancel_menu)
+    query.edit_message_text(text="התזכורת היומית בוטלה.", reply_markup=cancel_menu)
 
     # TODO - Delete from database
 
@@ -90,8 +90,7 @@ def choose_hour(update, context):
     query.answer()
 
     query.edit_message_text(text=
-        "מעולה!\n"
-        "נשלח לך לכאן כל יום בשעה *{}:00* תזכורת על מנת למלא את הטופס!".format(hour), parse_mode=ParseMode.MARKDOWN, reply_markup=inline_menu)
+        "נזכיר לך כל יום ב-{}:00 למלא את השאלון".format(hour), parse_mode=ParseMode.MARKDOWN, reply_markup=inline_menu)
     # TODO add inline keyboard for - 1. hour change 2. unsubscribe
 
 
