@@ -1,1 +1,1 @@
-web: python reminder_bot.py
+web: python manage.py reminder_bot

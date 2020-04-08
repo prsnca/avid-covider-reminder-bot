@@ -8,6 +8,9 @@ from telegram import ReplyKeyboardMarkup, ParseMode, InlineKeyboardButton, Inlin
 from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters,
                           ConversationHandler, CallbackQueryHandler)
 
+from django.core.management.base import BaseCommand, CommandError
+from reminders.models import Reminder
+
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -45,10 +48,6 @@ def start(update, context):
     return ask_for_hour(update, context)
 
 
-def reminder(update, context):
-    update.message.reply_text("מלא את השאלון", reply_markup=reminder_menu)
-
-
 def ask_for_hour(update, context):
     update.message.reply_text("באיזו שעה ביום תרצו שנזכיר לכם למלא את השאלון?", reply_markup=inline_markup)
 
@@ -78,7 +77,12 @@ def cancel(update, context):
     query.answer()
     query.edit_message_text(text="התזכורת היומית בוטלה.", reply_markup=cancel_menu)
 
-    # TODO - Delete from database
+    chat_id = query.message.chat_id
+    reminder = Reminder.objects.filter(chat_id=chat_id).first()
+
+    if reminder:
+        reminder.active = False
+        reminder.save()
 
 
 def choose_hour(update, context):
@@ -91,13 +95,19 @@ def choose_hour(update, context):
 
     query.edit_message_text(text=
         "נזכיר לך כל יום ב-{}:00 למלא את השאלון".format(hour), parse_mode=ParseMode.MARKDOWN, reply_markup=inline_menu)
-    # TODO add inline keyboard for - 1. hour change 2. unsubscribe
 
 
 def set_user_updates(user, chat_id, hour):
-    logger.info(_("User updating", user_name=user.username, chat_id=chat_id))
-    user_name = user.username
-    # TODO - save to database
+    logger.info(_("User updating", chat_id=chat_id))
+
+    reminder = Reminder.objects.filter(chat_id=chat_id).first()
+
+    if reminder is None:
+        reminder = Reminder(chat_id=chat_id)
+
+    reminder.hour = hour
+    reminder.active = True
+    reminder.save()
 
     return
 
@@ -107,38 +117,35 @@ def error(update, context):
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
 
-def main():
-    logger.info(_("Starting bot"))
-    token = os.getenv('BOT_TOKEN')
-    if token == None:
-        logger.error(_('BOT_TOKEN is missing'))
-        os.exit(1)
-    updater = Updater(token, use_context=True)
+class Command(BaseCommand):
+    help = 'Reminder Telegram Bot'
 
-    # Get the dispatcher to register handlers
-    dp = updater.dispatcher
+    def handle(self, *args, **options):
+        logger.info(_("Starting bot"))
+        token = os.getenv('BOT_TOKEN')
+        if token == None:
+            logger.error(_('BOT_TOKEN is missing'))
+            os.exit(1)
+        updater = Updater(token, use_context=True)
 
-    dp.add_handler(CommandHandler('start', start))
-    dp.add_handler(CommandHandler('reminder', reminder))
-    dp.add_handler(CallbackQueryHandler(menu_choice))
+        # Get the dispatcher to register handlers
+        dp = updater.dispatcher
 
-    # log all errors
-    dp.add_error_handler(error)
+        dp.add_handler(CommandHandler('start', start))
+        dp.add_handler(CallbackQueryHandler(menu_choice))
 
-    # Start the Bot
-    heroku_url = os.getenv('HEROKU_URL')
-    if heroku_url:
-        port = int(os.getenv('PORT', '8443'))
-        updater.start_webhook(listen="0.0.0.0",
-                          port=port,
-                          url_path=token)
-        updater.bot.set_webhook(heroku_url + token)
+        # log all errors
+        dp.add_error_handler(error)
+
+        # Start the Bot
+        heroku_url = os.getenv('HEROKU_URL')
+        if heroku_url:
+            port = int(os.getenv('PORT', '8443'))
+            updater.start_webhook(listen="0.0.0.0",
+                              port=port,
+                              url_path=token)
+            updater.bot.set_webhook(heroku_url + token)
+        else:
+            updater.start_polling()
+
         updater.idle()
-    else:
-        updater.start_polling()
-
-    updater.idle()
-
-
-if __name__ == '__main__':
-    main()
