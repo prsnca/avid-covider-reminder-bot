@@ -63,5 +63,5 @@ class Command(BaseCommand):
         for reminder in Reminder.objects.filter(hour=hour, active=True).all():
             logger.info(_("Sending reminder", chat_id=reminder.chat_id))
             updater.bot.send_message(chat_id=reminder.chat_id,
-                                     text="הגיע הזמן לדווח שוב כיצד אתם מרגישים! רק ביחד ננצח את הקורונה %F0%9F%92%AA!",
+                                     text="הגיע הזמן לדווח שוב כיצד אתם מרגישים! רק ביחד ננצח את הקורונה 💪!",
                                      reply_markup=reminder_menu)
