@@ -20,13 +20,13 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
-inline_hours = [InlineKeyboardButton(str(x) + ":00", callback_data=x) for x in [8, 10, 18, 20, 22]]
+
 inline_keyboard = [[hour] for hour in inline_hours]
 inline_markup = InlineKeyboardMarkup(inline_keyboard)
 
-change_hour_button = InlineKeyboardButton("שנה שעה", callback_data='hour')
-reregister_button = InlineKeyboardButton("הירשם שנית", callback_data='hour')
-cancel_button = InlineKeyboardButton("בטל תזכורת", callback_data='cancel')
+change_hour_button = InlineKeyboardButton("שינוי שעת תזכורת יומית", callback_data='hour')
+reregister_button = InlineKeyboardButton("חידוש תזכורת יומית", callback_data='hour')
+cancel_button = InlineKeyboardButton("ביטול תזכורת יומית", callback_data='cancel')
 reminder_button = InlineKeyboardButton("coronaisrael.org", callback_data='clicked', url="https://coronaisrael.org/?source=telegram-reminder")
 
 inline_menu = InlineKeyboardMarkup([[change_hour_button], [cancel_button]])
@@ -67,5 +67,5 @@ class Command(BaseCommand):
         for reminder in Reminder.objects.filter(hour=hour, active=True).all():
             logger.info(_("Sending reminder", chat_id=reminder.chat_id))
             updater.bot.send_message(chat_id=reminder.chat_id,
-                                     text="מלא את הטופס!",
+                                     text="הגיע הזמן לדווח שוב כיצד אתם מרגישים! רק ביחד ננצח את הקורונה %F0%9F%92%AA!",
                                      reply_markup=reminder_menu)
