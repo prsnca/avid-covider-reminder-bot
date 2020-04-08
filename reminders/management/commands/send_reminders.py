@@ -20,10 +20,6 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
-
-inline_keyboard = [[hour] for hour in inline_hours]
-inline_markup = InlineKeyboardMarkup(inline_keyboard)
-
 change_hour_button = InlineKeyboardButton("שינוי שעת תזכורת יומית", callback_data='hour')
 reregister_button = InlineKeyboardButton("חידוש תזכורת יומית", callback_data='hour')
 cancel_button = InlineKeyboardButton("ביטול תזכורת יומית", callback_data='cancel')
