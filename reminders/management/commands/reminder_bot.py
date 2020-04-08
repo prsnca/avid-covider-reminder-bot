@@ -44,7 +44,6 @@ _ = LogMessage
 
 def start(update, context):
     logger.info(_("User started"))
-    update.message.reply_text("ברוכים הבאים לבוט התזכורת של מחקר הקורונה של מכון וייצמן ותודה על ההשתתפות. הבוט הזה נועד לסייע לכם לזכור למלא את השאלון מידי יום באתר  coronaisrael.org, ולקבל מאיתנו עדכונים.")
     return ask_for_hour(update, context)
 
 
