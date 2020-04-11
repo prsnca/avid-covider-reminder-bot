@@ -93,7 +93,10 @@ def choose_hour(update, context):
     query.answer()
 
     query.edit_message_text(text=
-        "נזכיר לך כל יום ב-{}:00 למלא את השאלון".format(hour), parse_mode=ParseMode.MARKDOWN, reply_markup=inline_menu)
+        """*בחירתך נרשמה!*
+
+נזכיר לך בכל יום ב-*{}:00* למלא את השאלון.
+תודה! """.format(hour), parse_mode=ParseMode.MARKDOWN, reply_markup=inline_menu)
 
 
 def set_user_updates(user, chat_id, hour):
