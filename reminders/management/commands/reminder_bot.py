@@ -74,7 +74,7 @@ def menu_choice(update, context):
 def cancel(update, context):
     query = update.callback_query
     query.answer()
-    query.edit_message_text(text="התזכורת היומית בוטלה.", reply_markup=cancel_menu)
+    query.edit_message_text(text="התזכורת היומית בוטלה, ונמחקה מהמערכת.", reply_markup=cancel_menu)
 
     chat_id = query.message.chat_id
     reminder = Reminder.objects.filter(chat_id=chat_id).first()
