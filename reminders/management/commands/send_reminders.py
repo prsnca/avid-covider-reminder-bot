@@ -60,7 +60,7 @@ class Command(BaseCommand):
         timenow = datetime.now(tz)
         hour = timenow.hour
 
-        for reminder in Reminder.objects.filter(hour=hour, active=True).all():
+        for reminder in Reminder.objects.filter(hour=hour).all():
             logger.info(_("Sending reminder", chat_id=reminder.chat_id))
             updater.bot.send_message(chat_id=reminder.chat_id,
                                      text="הגיע הזמן לדווח שוב כיצד אתם מרגישים! רק ביחד ננצח את הקורונה 💪!",
