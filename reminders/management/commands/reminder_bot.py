@@ -80,8 +80,7 @@ def cancel(update, context):
     reminder = Reminder.objects.filter(chat_id=chat_id).first()
 
     if reminder:
-        reminder.active = False
-        reminder.save()
+        reminder.delete()
 
 
 def choose_hour(update, context):
@@ -108,7 +107,6 @@ def set_user_updates(user, chat_id, hour):
         reminder = Reminder(chat_id=chat_id)
 
     reminder.hour = hour
-    reminder.active = True
     reminder.save()
 
     return
