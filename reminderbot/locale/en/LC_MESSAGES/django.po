@@ -1,0 +1,35 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: reminder-bot 0.1\n"
+"Report-Msgid-Bugs-To: prsnca@gmail.com\n"
+"Last-Translator: Yaron <prsnca@gmail.com>\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "change_hour"
+msgstr "Change daily reminder time"
+
+msgid "unsubscribe"
+msgstr "Cancel reminders"
+
+msgid "subscribe"
+msgstr "Renew reminders"
+
+msgid "reminder_text"
+msgstr "Time to report again about how you're doing! It takes all of us to beat the Corona virus {}!"
+
+msgid "reminder_set"
+msgstr "*Your reminder is set!*\n"
+"\n"
+"We will remind you every day at {}:00 to fill out the form.\n"
+"Thanks!"
+
+msgid "ask_for_hour"
+msgstr "In which hour would you like to get your reminder?"
+
+msgid "reminder_cancelled"
+msgstr "Your daily reminder was cancelled and deleted from the system."
+
