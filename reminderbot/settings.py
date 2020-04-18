@@ -85,7 +85,7 @@ LANGUAGES = [
 ]
 
 LOCALE_PATHS = [
-    os.path.join(BASE_DIR, "locale"),
+    os.path.join(os.path.dirname(__file__), "locale"),
 ]
 
 TIME_ZONE = 'Asia/Jerusalem'
