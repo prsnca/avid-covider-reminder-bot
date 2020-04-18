@@ -4,12 +4,16 @@
 import logging
 
 import os, json
-from telegram import ReplyKeyboardMarkup, ParseMode, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters,
-                          ConversationHandler, CallbackQueryHandler)
+from telegram import ParseMode
+from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
 
 from django.core.management.base import BaseCommand, CommandError
+from django.conf import settings
+
 from reminders.models import Reminder
+from reminders.keyboards import *
+
+SUPPORTED_LANGUAGES = list(dict(settings.LANGUAGES).keys())
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -17,18 +21,6 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
-inline_hours = [InlineKeyboardButton(str(x) + ":00", callback_data=x) for x in [8, 10, 18, 20, 22]]
-inline_keyboard = [[hour] for hour in inline_hours]
-inline_markup = InlineKeyboardMarkup(inline_keyboard)
-
-change_hour_button = InlineKeyboardButton("שינוי שעת תזכורת יומית", callback_data='hour')
-reregister_button = InlineKeyboardButton("חידוש תזכורת יומית", callback_data='hour')
-cancel_button = InlineKeyboardButton("ביטול תזכורת יומית", callback_data='cancel')
-reminder_button = InlineKeyboardButton("coronaisrael.org", callback_data='clicked', url="https://coronaisrael.org/?source=telegram-reminder")
-
-inline_menu = InlineKeyboardMarkup([[change_hour_button], [cancel_button]])
-reminder_menu = InlineKeyboardMarkup([[reminder_button], [change_hour_button], [cancel_button]])
-cancel_menu = InlineKeyboardMarkup([[reregister_button]])
 
 
 class LogMessage(object):
@@ -42,24 +34,33 @@ class LogMessage(object):
 _ = LogMessage
 
 
+def is_language_available(lang):
+    return lang in SUPPORTED_LANGUAGES
+
+
 def start(update, context):
     logger.info(_("User started"))
     return ask_for_hour(update, context)
 
 
 def ask_for_hour(update, context):
-    update.message.reply_text("באיזו שעה ביום תרצו שנזכיר לכם למלא את השאלון?", reply_markup=inline_markup)
+    lang = None
+    if context.args:
+        lang_arg = context.args[0]
+        lang = lang_arg if is_language_available(lang_arg) else 'he'
+    update.message.reply_text(ask_for_hour_text(lang), reply_markup=hour_menu(lang))
 
 
 def change_hour(update, context):
     query = update.callback_query
+    _, lang = parse_callback_data(query.data)
     query.answer()
-    query.edit_message_text("באיזו שעה ביום תרצו שנזכיר לכם למלא את השאלון?", reply_markup=inline_markup)
+    query.edit_message_text(ask_for_hour_text(lang), reply_markup=hour_menu(lang))
 
 
 def menu_choice(update, context):
     query = update.callback_query
-    command = query.data
+    command, lang = parse_callback_data(query.data)
     if command == 'cancel':
         return cancel(update, context)
     elif command == 'hour':
@@ -73,8 +74,9 @@ def menu_choice(update, context):
 
 def cancel(update, context):
     query = update.callback_query
+    _, lang = parse_callback_data(query.data)
     query.answer()
-    query.edit_message_text(text="התזכורת היומית בוטלה ונמחקה מהמערכת.", reply_markup=cancel_menu)
+    query.edit_message_text(text=cancel_text(lang), reply_markup=cancel_menu(lang))
 
     chat_id = query.message.chat_id
     reminder = Reminder.objects.filter(chat_id=chat_id).first()
@@ -85,26 +87,24 @@ def cancel(update, context):
 
 def choose_hour(update, context):
     query = update.callback_query
-    hour = query.data
+    hour, lang = parse_callback_data(query.data)
     user = query.message.from_user
     chat_id = query.message.chat_id
-    set_user_updates(user, chat_id, hour)
+    set_user_updates(user, chat_id, hour, lang)
     query.answer()
 
-    query.edit_message_text(text=
-        """*בחירתך נרשמה!*
-
-נזכיר לך בכל יום ב-*{}:00* למלא את השאלון.
-תודה! """.format(hour), parse_mode=ParseMode.MARKDOWN, reply_markup=inline_menu)
+    query.edit_message_text(text=reminder_set(lang).format(hour), parse_mode=ParseMode.MARKDOWN, reply_markup=inline_menu(lang))
 
 
-def set_user_updates(user, chat_id, hour):
+def set_user_updates(user, chat_id, hour, lang):
     logger.info(_("User updating", chat_id=chat_id))
 
     reminder = Reminder.objects.filter(chat_id=chat_id).first()
 
     if reminder is None:
         reminder = Reminder(chat_id=chat_id)
+        if lang is not None:
+            reminder.lang = lang
 
     reminder.hour = hour
     reminder.save()

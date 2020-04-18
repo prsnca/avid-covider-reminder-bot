@@ -1,0 +1,36 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: reminder-bot 0.1\n"
+"Report-Msgid-Bugs-To: prsnca@gmail.com\n"
+"Last-Translator: Yaron <prsnca@gmail.com>\n"
+"Language: he\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "reminder_text"
+msgstr "הגיע הזמן לדווח שוב כיצד אתם מרגישים! רק ביחד ננצח את הקורונה {}!"
+
+msgid "reminder_set"
+msgstr "*בחירתך נרשמה!*\n"
+"\n"
+"נזכיר לך בכל יום ב-*{}:00* למלא את השאלון.\n"
+"תודה!"
+
+msgid "reminder_cancelled"
+msgstr "התזכורת היומית בוטלה ונמחקה מהמערכת."
+
+msgid "change_hour"
+msgstr "שינוי שעת תזכורת יומית"
+
+msgid "subscribe"
+msgstr "חידוש תזכורת יומית"
+
+msgid "unsubscribe"
+msgstr "ביטול תזכורת יומית"
+
+msgid "ask_for_hour"
+msgstr "באיזו שעה ביום תרצו שנזכיר לכם למלא את השאלון?"
+
+

@@ -10,6 +10,7 @@ from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters,
 
 from django.core.management.base import BaseCommand, CommandError
 from reminders.models import Reminder
+from reminders.keyboards import reminder_menu, reminder_text
 
 from datetime import datetime
 import pytz
@@ -20,14 +21,6 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
-change_hour_button = InlineKeyboardButton("שינוי שעת תזכורת יומית", callback_data='hour')
-reregister_button = InlineKeyboardButton("חידוש תזכורת יומית", callback_data='hour')
-cancel_button = InlineKeyboardButton("ביטול תזכורת יומית", callback_data='cancel')
-reminder_button = InlineKeyboardButton("coronaisrael.org", callback_data='clicked', url="https://coronaisrael.org/?source=telegram-reminder")
-
-inline_menu = InlineKeyboardMarkup([[change_hour_button], [cancel_button]])
-reminder_menu = InlineKeyboardMarkup([[reminder_button], [change_hour_button], [cancel_button]])
-cancel_menu = InlineKeyboardMarkup([[reregister_button]])
 
 
 class LogMessage(object):
@@ -62,6 +55,7 @@ class Command(BaseCommand):
 
         for reminder in Reminder.objects.filter(hour=hour).all():
             logger.info(_("Sending reminder", chat_id=reminder.chat_id))
+            lang = reminder.lang
             updater.bot.send_message(chat_id=reminder.chat_id,
-                                     text="הגיע הזמן לדווח שוב כיצד אתם מרגישים! רק ביחד ננצח את הקורונה 💪!",
-                                     reply_markup=reminder_menu)
+                                     text=reminder_text(lang).format("💪"),
+                                     reply_markup=reminder_menu(lang))
