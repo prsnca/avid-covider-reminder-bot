@@ -93,7 +93,7 @@ def choose_hour(update, context):
     set_user_updates(user, chat_id, hour, lang)
     query.answer()
 
-    query.edit_message_text(text=reminder_set(lang).format(hour), parse_mode=ParseMode.MARKDOWN, reply_markup=inline_menu(lang))
+    query.edit_message_text(text=reminder_set(lang).format(str(hour) + ':00'), parse_mode=ParseMode.MARKDOWN, reply_markup=inline_menu(lang))
 
 
 def set_user_updates(user, chat_id, hour, lang):

@@ -1,0 +1,33 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: reminder-bot 0.1\n"
+"Report-Msgid-Bugs-To: prsnca@gmail.com\n"
+"Last-Translator: Yaron <prsnca@gmail.com>\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "change_hour"
+msgstr "تغير موعد التذكير اليومي"
+
+msgid "unsubscribe"
+msgstr "إلغاء التذكير اليومي"
+
+msgid "subscribe"
+msgstr "تجديد التذكير اليومي"
+
+msgid "reminder_text"
+msgstr "وقت تخبرونا مجددًا كيف حالكم! معًا فقط سوف نهزم الكورونا!"
+
+msgid "reminder_set"
+msgstr "*تم تسجيل إختيارك!*\n"
+"\n"
+"سوف نقوم بتذكيرك كل يوم ب{} أن تقوم بتعبئة الإستبيان."
+
+msgid "ask_for_hour"
+msgstr "في أي ساعة من اليوم تُريد/ين أن نُذكرك بتعبئة الإستبيان؟"
+
+msgid "reminder_cancelled"
+msgstr "تم إلغاء وحذف التذكير اليومي من النظام"

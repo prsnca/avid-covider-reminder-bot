@@ -56,7 +56,7 @@ def cancel_menu(lang=None):
 
 def reminder_text(lang=None):
     set_language(lang)
-    return _('reminder_text')
+    return _('reminder_text') + " 💪"
 
 
 def reminder_set(lang=None):

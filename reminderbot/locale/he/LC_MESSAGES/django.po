@@ -10,12 +10,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "reminder_text"
-msgstr "הגיע הזמן לדווח שוב כיצד אתם מרגישים! רק ביחד ננצח את הקורונה {}!"
+msgstr "הגיע הזמן לדווח שוב כיצד אתם מרגישים! רק ביחד ננצח את הקורונה!"
 
 msgid "reminder_set"
 msgstr "*בחירתך נרשמה!*\n"
 "\n"
-"נזכיר לך בכל יום ב-*{}:00* למלא את השאלון.\n"
+"נזכיר לך בכל יום ב-{} למלא את השאלון.\n"
 "תודה!"
 
 msgid "reminder_cancelled"

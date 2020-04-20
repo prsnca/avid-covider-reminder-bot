@@ -82,6 +82,10 @@ LANGUAGE_CODE = 'en-us'
 LANGUAGES = [
     ('he', 'Hebrew'),
     ('en', 'English'),
+    ('ar', 'Arabic'),
+    ('fr', 'French'),
+    ('es', 'Spanish'),
+    ('ru', 'Russian'),
 ]
 
 LOCALE_PATHS = [

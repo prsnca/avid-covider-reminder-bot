@@ -57,5 +57,5 @@ class Command(BaseCommand):
             logger.info(_("Sending reminder", chat_id=reminder.chat_id))
             lang = reminder.lang
             updater.bot.send_message(chat_id=reminder.chat_id,
-                                     text=reminder_text(lang).format("💪"),
+                                     text=reminder_text(lang),
                                      reply_markup=reminder_menu(lang))

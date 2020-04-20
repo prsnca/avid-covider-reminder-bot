@@ -1,0 +1,35 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: reminder-bot 0.1\n"
+"Report-Msgid-Bugs-To: prsnca@gmail.com\n"
+"Last-Translator: Yaron <prsnca@gmail.com>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "change_hour"
+msgstr "Cambiar la hora de recordatorio diario"
+
+msgid "unsubscribe"
+msgstr "Cancelar recordatorios diarios"
+
+msgid "subscribe"
+msgstr "Renovar recordatorios"
+
+msgid "reminder_text"
+msgstr "¡Llegó la hora de que nos vuelvas a contar cómo se sienten! ¡Sólo juntos venceremos a Coronavirus!"
+
+msgid "reminder_set"
+msgstr "*¡Tu recordatorio está listo!*\n"
+"\n"
+"Le recordaremos todos los días a las {} que complete el formulario.\n"
+"¡Gracias!"
+
+msgid "ask_for_hour"
+msgstr "¿A qué hora del día desea que le recordemos que complete el cuestionario?"
+
+msgid "reminder_cancelled"
+msgstr "Tu recordatorio ha sido cancelado."
+
