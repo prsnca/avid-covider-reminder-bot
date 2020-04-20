@@ -72,3 +72,8 @@ def ask_for_hour_text(lang=None):
 def cancel_text(lang=None):
     set_language(lang)
     return _('reminder_cancelled')
+
+
+def welcome_text(lang=None):
+    set_language(lang)
+    return _('welcome')

@@ -33,6 +33,13 @@ class LogMessage(object):
 
 _ = LogMessage
 
+def get_language(context):
+    lang = None
+    if context.args:
+        lang_arg = context.args[0]
+        lang = lang_arg if is_language_available(lang_arg) else 'he'
+    return lang
+
 
 def is_language_available(lang):
     return lang in SUPPORTED_LANGUAGES
@@ -40,14 +47,13 @@ def is_language_available(lang):
 
 def start(update, context):
     logger.info(_("User started"))
+    lang = get_language(context)
+    update.message.reply_text(welcome_text(lang))
     return ask_for_hour(update, context)
 
 
 def ask_for_hour(update, context):
-    lang = None
-    if context.args:
-        lang_arg = context.args[0]
-        lang = lang_arg if is_language_available(lang_arg) else 'he'
+    lang = get_language(context)
     update.message.reply_text(ask_for_hour_text(lang), reply_markup=hour_menu(lang))
 
 
