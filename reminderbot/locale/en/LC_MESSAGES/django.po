@@ -33,3 +33,8 @@ msgstr "At what time of day would you like to fill out your report?"
 msgid "reminder_cancelled"
 msgstr "Your reminder is cancelled."
 
+msgid "welcome"
+msgstr "Hello and welcome to the daily reminder bot for the https://coronaisrael.org/en/ research form.\n"
+"\n"
+"The service is based on the Telegram application and its terms of service. We do not receive or store any personal details, except for a unique identifier.\n"
+"If you do not want to receive our reminders, you can always cancel them and you can also delete the unique identifier."
