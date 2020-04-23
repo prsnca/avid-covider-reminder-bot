@@ -1,7 +1,7 @@
 from telegram import ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup
 from django.utils.translation import gettext as _, activate
 
-URL = "https://coronaisrael.org/?source=telegram-reminder"
+URL = "https://coronaisrael.org/{}/?source=telegram-reminder"
 HOURS = [8, 10, 18, 20, 22]
 DEFAULT_LANGUAGE = 'he'
 
@@ -42,7 +42,9 @@ def inline_menu(lang=None):
 
 def reminder_menu(lang=None):
     set_language(lang)
-    reminder_button = InlineKeyboardButton("coronaisrael.org", callback_data=get_callback_data('clicked', lang), url=URL)
+    lang_for_url = lang if lang != 'he' else ''
+    url_with_translation = URL.format(lang_for_url)
+    reminder_button = InlineKeyboardButton("coronaisrael.org", callback_data=get_callback_data('clicked', lang), url=url_with_translation)
     change_hour_button = InlineKeyboardButton(_('change_hour'), callback_data=get_callback_data('hour', lang))
     cancel_button = InlineKeyboardButton(_('unsubscribe'), callback_data=get_callback_data('cancel', lang))
     return InlineKeyboardMarkup([[reminder_button], [change_hour_button], [cancel_button]])
