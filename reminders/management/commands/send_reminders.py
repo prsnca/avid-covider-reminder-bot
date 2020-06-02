@@ -56,6 +56,9 @@ class Command(BaseCommand):
         for reminder in Reminder.objects.filter(hour=hour).all():
             logger.info(_("Sending reminder", chat_id=reminder.chat_id))
             lang = reminder.lang
-            updater.bot.send_message(chat_id=reminder.chat_id,
-                                     text=reminder_text(lang),
-                                     reply_markup=reminder_menu(lang))
+            try:
+                updater.bot.send_message(chat_id=reminder.chat_id,
+                                         text=reminder_text(lang),
+                                         reply_markup=reminder_menu(lang))
+            except BaseException as e:
+                logger.error(_("Failed to send reminder", chat_id=reminder.chat_id, e=str(e)))
